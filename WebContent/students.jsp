@@ -27,7 +27,7 @@
                     Class.forName("org.postgresql.Driver");
     
                     // Make a connection to the datasource "cse132b"
-                    Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:1328/cse132b", "postgres", "hardylou");
+                    Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/cse132b", "postgres", "hardylou");
             %>
 
             <%-- -------- INSERT Code -------- --%>
@@ -41,7 +41,7 @@
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO Student VALUES (?, ?, ?, ?, ?, ?,?)");
+                            "INSERT INTO Student VALUES (?, ?, ?, ?, ?, ?, ?)");
  
                         pstmt.setInt(
                             1, Integer.parseInt(request.getParameter("SSN")));
@@ -80,7 +80,7 @@
                             7, Integer.parseInt(request.getParameter("SSN")));
                         int rowCount = pstmt.executeUpdate();
                         // Commit transaction
-                         conn.commit();
+                        conn.commit();
                         conn.setAutoCommit(true);
                     }
             %>

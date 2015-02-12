@@ -27,7 +27,7 @@
                     Class.forName("org.postgresql.Driver");
     
                     // Make a connection to the datasource "cse132b"
-                    Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:1328/cse132b", "postgres", "hardylou");
+                    Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/cse132b", "postgres", "hardylou");
             %>
 
             <%-- -------- INSERT Code -------- --%>
@@ -42,12 +42,12 @@
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
                             "INSERT INTO Faculty VALUES (?, ?, ?, ?, ?)");
- 
-                        pstmt.setString(1, request.getParameter("FIRSTNAME"));
-                        pstmt.setString(2, request.getParameter("MIDDLENAME"));
-                        pstmt.setString(3, request.getParameter("LASTNAME"));   
+
+                        pstmt.setString(1, request.getParameter("LASTNAME"));
+                        pstmt.setString(2, request.getParameter("FIRSTNAME"));
+                        pstmt.setString(3, request.getParameter("MIDDLENAME"));
                         pstmt.setString(4, request.getParameter("TITLE"));
-                        pstmt.setString(5, request.getParameter("DEPARTMENT"));
+                        pstmt.setString(5, request.getParameter("DEPTNAME"));   
                         int rowCount = pstmt.executeUpdate();
                         // Commit transaction
                         conn.commit();
@@ -66,11 +66,11 @@
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
                             "UPDATE Faculty SET FIRSTNAME = ?, MIDDLENAME = ?, " +
-                            "TITLE = ?, DEPARTMENT = ? WHERE LASTNAME = ?");
+                            "TITLE = ?, DEPTNAME = ? WHERE LASTNAME = ?");
                         pstmt.setString(1, request.getParameter("FIRSTNAME"));
                         pstmt.setString(2, request.getParameter("MIDDLENAME"));
                         pstmt.setString(3, request.getParameter("TITLE"));
-                        pstmt.setString(4, request.getParameter("DEPARTMENT"));
+                        pstmt.setString(4, request.getParameter("DEPTNAME"));
                         pstmt.setString(5, request.getParameter("LASTNAME"));
                         int rowCount = pstmt.executeUpdate();
                         // Commit transaction
@@ -111,21 +111,20 @@
             <!-- Add an HTML table header row to format the results -->
                 <table border="1">
                     <tr>
-                        <th>First</th>
-                        <th>Middle</th>
-                        <th>Last</th>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
                         <th>Title</th>
-                        <th>Department</th>
-                        <th>Action</th>
+                        <th>Dept</th>
                     </tr>
                     <tr>
                         <form action="faculty.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
+                            <th><input value="" name="LASTNAME" size="15"></th>
                             <th><input value="" name="FIRSTNAME" size="15"></th>
                             <th><input value="" name="MIDDLENAME" size="15"></th>
-                            <th><input value="" name="LASTNAME" size="15"></th>
                             <th><input value="" name="TITLE" size="15"></th>
-                            <th><input value="" name="DEPARTMENT" size="15"></th>
+                            <th><input value="" name="DEPTNAME" size="5"></th>
                             <th><input type="submit" value="Insert"></th>
                         </form>
                     </tr>
@@ -142,34 +141,34 @@
                         <form action="faculty.jsp" method="get">
                             <input type="hidden" value="update" name="action">
 
-                            <%-- Get the FIRSTNAME --%>
-                            <td>
-                                <input value="<%= rs.getString("FIRSTNAME") %>"
-                                    name="FIRSTNAME" size="15">
-                            </td>
-    
-                            <%-- Get the MIDDLENAME --%>
-                            <td>
-                                <input value="<%= rs.getString("MIDDLENAME") %>" 
-                                    name="MIDDLENAME" size="15">
-                            </td>
-    
-                            <%-- Get the LASTNAME --%>
+                            <%-- Get the SSN, which is a number --%>
                             <td>
                                 <input value="<%= rs.getString("LASTNAME") %>" 
                                     name="LASTNAME" size="15">
                             </td>
-
-                            <%-- Get the position title --%>
+    
+                            <%-- Get the ID --%>
+                            <td>
+                                <input value="<%= rs.getString("FIRSTNAME") %>" 
+                                    name="FIRSTNAME" size="15">
+                            </td>
+    
+                            <%-- Get the FIRSTNAME --%>
+                            <td>
+                                <input value="<%= rs.getString("MIDDLENAME") %>"
+                                    name="MIDDLENAME" size="15">
+                            </td>
+    
+                            <%-- Get the MIDDLENAME --%>
                             <td>
                                 <input value="<%= rs.getString("TITLE") %>" 
                                     name="TITLE" size="15">
                             </td>
-
-                            <%-- Get the department --%>
+    
+                            <%-- Get the LASTNAME --%>
                             <td>
-                                <input value="<%= rs.getString("DEPARTMENT") %>" 
-                                    name="DEPARTMENT" size="15">
+                                <input value="<%= rs.getString("DEPTNAME") %>" 
+                                    name="DEPTNAME" size="5">
                             </td>
     
                             <%-- Button --%>

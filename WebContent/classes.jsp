@@ -27,7 +27,7 @@
                     Class.forName("org.postgresql.Driver");
     
                     // Make a connection to the datasource "cse132b"
-                    Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:1328/cse132b", "postgres", "hardylou");
+                    Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/cse132b", "postgres", "hardylou");
             %>
 
             <%-- -------- INSERT Code -------- --%>
@@ -41,20 +41,19 @@
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO Class VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                            "INSERT INTO Class VALUES (?, ?, ?, ?, ?, ?, ?)");
  
-                        pstmt.setString(1, request.getParameter("NUMBER"));
-                        pstmt.setString(2, request.getParameter("DATE"));
-                        pstmt.setString(3, request.getParameter("TITLE"));
                         pstmt.setInt(
-                            4, Integer.parseInt(request.getParameter("SECTIONID")));
-                        pstmt.setString(5, request.getParameter("INSTRUCTOR"));
+                            1, Integer.parseInt(request.getParameter("SECTIONID")));
+                        pstmt.setString(2, request.getParameter("COURSETITLE"));
+                        pstmt.setString(3, request.getParameter("TERM"));
+                        pstmt.setString(4, request.getParameter("INSTRUCTOR"));
                         pstmt.setInt(
-                            6, Integer.parseInt(request.getParameter("LIMIT")));
+                            5, Integer.parseInt(request.getParameter("ENROLLED")));
                         pstmt.setInt(
-                            7, Integer.parseInt(request.getParameter("ENROLLED")));
+                            6, Integer.parseInt(request.getParameter("SEATS")));
                         pstmt.setInt(
-                            8, Integer.parseInt(request.getParameter("WAITLIST")));
+                            7, Integer.parseInt(request.getParameter("WAITLIST")));
                         int rowCount = pstmt.executeUpdate();
                         // Commit transaction
                         conn.commit();
@@ -72,23 +71,22 @@
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE Class SET NUMBER = ?, DATE = ?, " +
-                            "TITLE = ?, INSTRUCTOR = ?, LIMIT = ?, ENROLLED =?, WAITLIST = ? WHERE SECTIONID = ?");
-                        pstmt.setString(1, request.getParameter("NUMBER"));
-                        pstmt.setString(2, request.getParameter("DATE"));
-                        pstmt.setString(3, request.getParameter("TITLE"));
-                        pstmt.setString(4, request.getParameter("INSTRUCTOR"));
+                            "UPDATE Class SET COURSETITLE = ?, TERM = ?, INSTRUCTOR = ?, " +
+                            "ENROLLED = ?, SEATS = ?, WAITLIST = ? WHERE SECTIONID = ?");
+                        pstmt.setString(1, request.getParameter("COURSETITLE"));
+                        pstmt.setString(2, request.getParameter("TERM"));
+                        pstmt.setString(3, request.getParameter("INSTRUCTOR"));
                         pstmt.setInt(
-                            5, Integer.parseInt(request.getParameter("LIMIT")));
+                            4, Integer.parseInt(request.getParameter("ENROLLED")));
                         pstmt.setInt(
-                            6, Integer.parseInt(request.getParameter("ENROLLED")));
+                            5, Integer.parseInt(request.getParameter("SEATS")));
                         pstmt.setInt(
-                            7, Integer.parseInt(request.getParameter("WAITLIST")));
+                            6, Integer.parseInt(request.getParameter("WAITLIST")));
                         pstmt.setInt(
-                            8, Integer.parseInt(request.getParameter("SECTIONID")));
+                            7, Integer.parseInt(request.getParameter("SECTIONID")));
                         int rowCount = pstmt.executeUpdate();
                         // Commit transaction
-                         conn.commit();
+                        conn.commit();
                         conn.setAutoCommit(true);
                     }
             %>
@@ -126,27 +124,25 @@
             <!-- Add an HTML table header row to format the results -->
                 <table border="1">
                     <tr>
-                        <th>Course #</th>
-                        <th>Qtr/Year</th>
-                        <th>Title</th>
                         <th>Section ID</th>
-                        <th>Prof. Last Name</th>
-                        <th>Seat Limit</th>
+                        <th>Course Title</th>
+                        <th>Term</th>
+                        <th>Instructor</th>
                         <th>Enrolled</th>
+                        <th>Limit</th>
                         <th>Waitlist</th>
                         <th>Action</th>
                     </tr>
                     <tr>
                         <form action="classes.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
-                            <th><input value="" name="NUMBER" size="10"></th>
-                            <th><input value="" name="DATE" size="10"></th>
-                            <th><input value="" name="TITLE" size="15"></th>
-                            <th><input value="" name="SECTIONID" size="15"></th>
-                            <th><input value="" name="INSTRUCTOR" size="20"></th>
-                            <th><input value="" name="LIMIT" size="15"></th>
-                            <th><input value="" name="ENROLLED" size="15"></th>
-                            <th><input value="" name="WAITLIST" size="15"></th>
+                            <th><input value="" name="SECTIONID" size="10"></th>
+                            <th><input value="" name="COURSETITLE" size="20"></th>
+                            <th><input value="" name="TERM" size="5"></th>
+                            <th><input value="" name="INSTRUCTOR" size="15"></th>
+                            <th><input value="" name="ENROLLED" size="5"></th>
+                            <th><input value="" name="SEATS" size="5"></th>
+                            <th><input value="" name="WAITLIST" size="5"></th>
                             <th><input type="submit" value="Insert"></th>
                         </form>
                     </tr>
@@ -163,52 +159,46 @@
                         <form action="classes.jsp" method="get">
                             <input type="hidden" value="update" name="action">
 
-                            <%-- Get the course number --%>
-                            <td>
-                                <input value="<%= rs.getString("NUMBER") %>" 
-                                    name="NUMBER" size="10">
-                            </td>
-    
-                            <%-- Get the quarter and year --%>
-                            <td>
-                                <input value="<%= rs.getString("DATE") %>" 
-                                    name="DATE" size="10">
-                            </td>
-    
-                            <%-- Get the course title --%>
-                            <td>
-                                <input value="<%= rs.getString("TITLE") %>"
-                                    name="TITLE" size="15">
-                            </td>
-    
-                            <%-- Get the section ID --%>
+                            <%-- Get the SSN, which is a number --%>
                             <td>
                                 <input value="<%= rs.getInt("SECTIONID") %>" 
-                                    name="SECTIONID" size="15">
+                                    name="SECTIONID" size="10">
                             </td>
     
-                            <%-- Get the Instructor's name --%>
+                            <%-- Get the ID --%>
+                            <td>
+                                <input value="<%= rs.getString("COURSETITLE") %>" 
+                                    name="COURSETITLE" size="20">
+                            </td>
+                            
+                            <%-- Get the ID --%>
+                            <td>
+                                <input value="<%= rs.getString("TERM") %>" 
+                                    name="TERM" size="5">
+                            </td>
+                            
+                            <%-- Get the ID --%>
                             <td>
                                 <input value="<%= rs.getString("INSTRUCTOR") %>" 
-                                    name="INSTRUCTOR" size="20">
+                                    name="INSTRUCTOR" size="15">
                             </td>
-
-                            <%-- Get the enrollment limit --%>
+    
+                            <%-- Get the FIRSTNAME --%>
                             <td>
-                                <input value="<%= rs.getInt("LIMIT") %>" 
-                                    name="LIMIT" size="15">
+                                <input value="<%= rs.getInt("ENROLLED") %>"
+                                    name="ENROLLED" size="5">
                             </td>
-
-                            <%-- Get the enrolled --%>
+    
+                            <%-- Get the MIDDLENAME --%>
                             <td>
-                                <input value="<%= rs.getInt("ENROLLED") %>" 
-                                    name="ENROLLED" size="15">
+                                <input value="<%= rs.getInt("SEATS") %>" 
+                                    name="SEATS" size="5">
                             </td>
-
-                            <%-- Get waitlist --%>
+    
+                            <%-- Get the LASTNAME --%>
                             <td>
                                 <input value="<%= rs.getInt("WAITLIST") %>" 
-                                    name="WAITLIST" size="15">
+                                    name="WAITLIST" size="5">
                             </td>
     
                             <%-- Button --%>

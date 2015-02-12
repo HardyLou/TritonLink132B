@@ -5,7 +5,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Prerequisites</title>
+<title>Class Enrollment</title>
 </head>
 
 <body>
@@ -45,13 +45,17 @@
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO CoursePrerequisites VALUES (?, ?, ?)");
+                            "INSERT INTO ClassEnrollment VALUES (?, ?, ?, ?, ?, ?)");
  
                         pstmt.setInt(
                                 1, Integer.parseInt(request.getParameter("ENTRY")));
-                        pstmt.setString(2, request.getParameter("COURSETITLE"));
-                        pstmt.setString(3, request.getParameter("PREREQUISITE"));
-
+                        pstmt.setString(2, request.getParameter("STUDENTID"));
+                        pstmt.setInt(
+                                3, Integer.parseInt(request.getParameter("SECTIONID")));
+                        pstmt.setString(4, request.getParameter("TERM"));
+                        pstmt.setString(5, request.getParameter("GRADE"));
+                        pstmt.setInt(
+                                6, Integer.parseInt(request.getParameter("UNITS")));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -71,13 +75,17 @@
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE CoursePrerequisites SET COURSETITLE = ?, " + 
-                            "PREREQUISITE = ? WHERE ENTRY = ?");
-
-                        pstmt.setString(1, request.getParameter("COURSETITLE"));
-                        pstmt.setString(2, request.getParameter("PREREQUISITE"));
+                            "UPDATE ClassEnrollment SET STUDENTID = ?, SECTIONID = ?," +
+                            "TERM = ?, GRADE = ?, UNITS = ? WHERE ENTRY = ?");
+                        pstmt.setString(1, request.getParameter("STUDENTID"));
                         pstmt.setInt(
-                                3, Integer.parseInt(request.getParameter("ENTRY")));
+                                2, Integer.parseInt(request.getParameter("SECTIONID")));
+                        pstmt.setString(3, request.getParameter("TERM"));                        
+                        pstmt.setString(4, request.getParameter("GRADE"));
+                        pstmt.setInt(
+                                5, Integer.parseInt(request.getParameter("UNITS")));          
+                        pstmt.setInt(
+                                6, Integer.parseInt(request.getParameter("ENTRY")));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -97,10 +105,9 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM CoursePrerequisites WHERE ENTRY = ?");
+                            "DELETE FROM ClassEnrollment WHERE ENTRY = ?");
 
-                        pstmt.setInt(
-                                1, Integer.parseInt(request.getParameter("ENTRY")));
+                        pstmt.setString(1, request.getParameter("ENTRY"));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -117,22 +124,28 @@
                     // Use the created statement to SELECT
                     // the student attributes FROM the Student table.
                     ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM CoursePrerequisites");
+                        ("SELECT * FROM ClassEnrollment");
             %>
 
             <!-- Add an HTML table header row to format the results -->
                 <table border="1">
                     <tr>
                         <th>Entry</th>
-                        <th>Course Title</th>
-                        <th>Prerequisite</th>
+                        <th>Student ID</th>
+                        <th>Section ID</th>
+                        <th>Term Enrolled</th>
+                        <th>Grade Received</th>
+                        <th>Units</th>
                     </tr>
                     <tr>
-                        <form action="prerequisites.jsp" method="get">
+                        <form action="class_enrollment.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
                             <th><input value="" name="ENTRY" size="5"></th>
-                            <th><input value="" name="COURSETITLE" size="20"></th>
-                            <th><input value="" name="PREREQUISITE" size="20"></th>
+                            <th><input value="" name="STUDENTID" size="20"></th>
+                            <th><input value="" name="SECTIONID" size="20"></th>
+                            <th><input value="" name="TERM" size="5"></th>
+                            <th><input value="" name="GRADE" size="5"></th>
+                            <th><input value="" name="UNITS" size="5"></th>
                             <th><input type="submit" value="Insert"></th>
                         </form>
                     </tr>
@@ -146,10 +159,10 @@
             %>
 
                     <tr>
-                        <form action="prerequisites.jsp" method="get">
+                        <form action="class_enrollment.jsp" method="get">
                             <input type="hidden" value="update" name="action">
 
-                            <%-- Get the SSN, which is a number --%>
+                            <%-- Get the ID --%>
                             <td>
                                 <input value="<%= rs.getInt("ENTRY") %>" 
                                     name="ENTRY" size="5">
@@ -157,14 +170,32 @@
 
                             <%-- Get the SSN, which is a number --%>
                             <td>
-                                <input value="<%= rs.getString("COURSETITLE") %>" 
-                                    name="COURSETITLE" size="20">
+                                <input value="<%= rs.getString("STUDENTID") %>" 
+                                    name="STUDENTID" size="20">
                             </td>
     
                             <%-- Get the ID --%>
                             <td>
-                                <input value="<%= rs.getString("PREREQUISITE") %>" 
-                                    name="PREREQUISITE" size="20">
+                                <input value="<%= rs.getInt("SECTIONID") %>" 
+                                    name="SECTIONID" size="20">
+                            </td>
+                            
+                            <%-- Get the SSN, which is a number --%>
+                            <td>
+                                <input value="<%= rs.getString("TERM") %>" 
+                                    name="TERM" size="5">
+                            </td>
+                            
+                            <%-- Get the SSN, which is a number --%>
+                            <td>
+                                <input value="<%= rs.getString("GRADE") %>" 
+                                    name="GRADE" size="5">
+                            </td>
+                            
+                            <%-- Get the SSN, which is a number --%>
+                            <td>
+                                <input value="<%= rs.getInt("UNITS") %>" 
+                                    name="UNITS" size="5">
                             </td>
     
                             <%-- Button --%>
@@ -172,7 +203,7 @@
                                 <input type="submit" value="Update">
                             </td>
                         </form>
-                        <form action="prerequisites.jsp" method="get">
+                        <form action="class_enrollment.jsp" method="get">
                             <input type="hidden" value="delete" name="action">
                             <input type="hidden" 
                                 value="<%= rs.getInt("ENTRY") %>" name="ENTRY">
