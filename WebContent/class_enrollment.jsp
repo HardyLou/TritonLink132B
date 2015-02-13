@@ -133,8 +133,8 @@
                         <th>Entry</th>
                         <th>Student ID</th>
                         <th>Section ID</th>
-                        <th>Term Enrolled</th>
-                        <th>Grade Received</th>
+                        <th>Term</th>
+                        <th>Grade</th>
                         <th>Units</th>
                     </tr>
                     <tr>

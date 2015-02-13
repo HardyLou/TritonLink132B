@@ -15,7 +15,7 @@
         <tr>
             <td valign="top">
                 <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="students_menu.html" />
+                <jsp:include page="menu_students.html" />
             </td>
             <td>
 
