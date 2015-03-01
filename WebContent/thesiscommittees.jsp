@@ -48,8 +48,8 @@
                             "INSERT INTO ThesisCommittee VALUES (?, ?, ?)");
  
                         pstmt.setString(1, request.getParameter("ID"));
-                        pstmt.setString(2, request.getParameter("MEMBERID"));
-                        pstmt.setString(3, request.getParameter("MEMBERDEPT"));
+                        pstmt.setString(2, request.getParameter("FACULTYNAME"));
+                        pstmt.setString(3, request.getParameter("FACULTYDEPT"));
 
                         int rowCount = pstmt.executeUpdate();
 
@@ -70,11 +70,11 @@
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE ThesisCommittee SET MEMBERID = ?, " + 
-                            "MEMBERDEPT = ? WHERE ID = ?");
+                            "UPDATE ThesisCommittee SET FACULTYNAME = ?, " + 
+                            "FACULTYDEPT = ? WHERE ID = ?");
 
-                        pstmt.setString(1, request.getParameter("MEMBERID"));
-                        pstmt.setString(2, request.getParameter("MEMBERDEPT"));
+                        pstmt.setString(1, request.getParameter("FACULTYNAME"));
+                        pstmt.setString(2, request.getParameter("FACULTYDEPT"));
                         pstmt.setString(3, request.getParameter("ID"));
                         int rowCount = pstmt.executeUpdate();
 
@@ -95,9 +95,10 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM ThesisCommittee WHERE ID = ?");
+                            "DELETE FROM ThesisCommittee WHERE ID = ? AND FACULTYNAME = ?");
 
                         pstmt.setString(1, request.getParameter("ID"));
+                        pstmt.setString(2, request.getParameter("FACULTYNAME"));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -121,15 +122,15 @@
                 <table border="1">
                     <tr>
                         <th>Committee ID</th>
-                        <th>Member ID</th>
-                        <th>Member Dept</th>
+                        <th>Faculty Name</th>
+                        <th>Faculty Dept</th>
                     </tr>
                     <tr>
                         <form action="thesiscommittees.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
                             <th><input value="" name="ID" size="10"></th>
-                            <th><input value="" name="MEMBERID" size="10"></th>
-                            <th><input value="" name="MEMBERDEPT" size="5"></th>
+                            <th><input value="" name="FACULTYNAME" size="10"></th>
+                            <th><input value="" name="FACULTYDEPT" size="5"></th>
                             <th><input type="submit" value="Insert"></th>
                         </form>
                     </tr>
@@ -145,34 +146,31 @@
                     <tr>
                         <form action="thesiscommittees.jsp" method="get">
                             <input type="hidden" value="update" name="action">
-
-                            <%-- Get the SSN, which is a number --%>
                             <td>
                                 <input value="<%= rs.getString("ID") %>" 
                                     name="ID" size="10">
                             </td>
-
-                            <%-- Get the SSN, which is a number --%>
                             <td>
-                                <input value="<%= rs.getString("MEMBERID") %>" 
-                                    name="MEMBERID" size="10">
+                                <input value="<%= rs.getString("FACULTYNAME") %>" 
+                                    name="FACULTYNAME" size="10">
                             </td>
-    
-                            <%-- Get the ID --%>
                             <td>
-                                <input value="<%= rs.getString("MEMBERDEPT") %>" 
-                                    name="MEMBERDEPT" size="5">
+                                <input value="<%= rs.getString("FACULTYDEPT") %>" 
+                                    name="FACULTYDEPT" size="5">
                             </td>
-    
-                            <%-- Button --%>
+<%--
                             <td>
                                 <input type="submit" value="Update">
                             </td>
+ --%>
                         </form>
+                        
                         <form action="thesiscommittees.jsp" method="get">
                             <input type="hidden" value="delete" name="action">
                             <input type="hidden" 
                                 value="<%= rs.getString("ID") %>" name="ID">
+                            <input type="hidden" 
+                                value="<%= rs.getString("FACULTYNAME") %>" name="FACULTYNAME">
                             <%-- Button --%>
                             <td>
                                 <input type="submit" value="Delete">

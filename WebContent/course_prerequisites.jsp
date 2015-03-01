@@ -123,7 +123,7 @@
                         <th>Prerequisite</th>
                     </tr>
                     <tr>
-                        <form action="course_prevnumbers.jsp" method="get">
+                        <form action="course_prerequisites.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
                             <th><input value="" name="COURSETITLE" size="20"></th>
                             <th><input value="" name="PREREQUISITE" size="20"></th>
@@ -140,7 +140,7 @@
             %>
 
                     <tr>
-                        <form action="course_prevnumbers.jsp" method="get">
+                        <form action="course_prerequisites.jsp" method="get">
                             <input type="hidden" value="update" name="action">
 
                             <%-- Get the SSN, which is a number --%>
@@ -156,7 +156,7 @@
                             </td>
     
                         </form>
-                        <form action="course_prevnumbers.jsp" method="get">
+                        <form action="course_prerequisites.jsp" method="get">
                             <input type="hidden" value="delete" name="action">
                             <input type="hidden" 
                                 value="<%= rs.getString("COURSETITLE") %>" name="COURSETITLE">

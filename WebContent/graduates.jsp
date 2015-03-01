@@ -41,7 +41,7 @@
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO Graduate VALUES (?, ?, ?, ?, ?, ?)");
+                            "INSERT INTO Graduate VALUES (?, ?, ?, ?, ?, ?, ?)");
 
                         pstmt.setString(1, request.getParameter("STUDENTID"));
                         pstmt.setString(2, request.getParameter("DEPTNAME"));
@@ -49,6 +49,7 @@
                         pstmt.setString(4, request.getParameter("IS_PRECANDIDATE"));
                         pstmt.setString(5, request.getParameter("IS_CANDIDATE")); 
                         pstmt.setString(6, request.getParameter("CANDIDATE_ADVISOR")); 
+                        pstmt.setString(7, request.getParameter("COMMITTEEID")); 
                         int rowCount = pstmt.executeUpdate();
                         // Commit transaction
                         conn.commit();
@@ -67,14 +68,15 @@
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
                             "UPDATE Graduate SET DEPTNAME = ?, CLASSIFICATION = ?, " +
-                            "IS_PRECANDIDATE = ?, IS_CANDIDATE = ?, CANDIDATE_ADVISOR = ? " +
-                            "WHERE STUDENTID = ?");
+                            "IS_PRECANDIDATE = ?, IS_CANDIDATE = ?, CANDIDATE_ADVISOR = ?, " +
+                            "COMMITTEEID = ? WHERE STUDENTID = ?");
                         pstmt.setString(1, request.getParameter("DEPTNAME"));
                         pstmt.setString(2, request.getParameter("CLASSIFICATION"));
                         pstmt.setString(3, request.getParameter("IS_PRECANDIDATE"));
                         pstmt.setString(4, request.getParameter("IS_CANDIDATE"));
                         pstmt.setString(5, request.getParameter("CANDIDATE_ADVISOR"));
-                        pstmt.setString(6, request.getParameter("STUDENTID")); 
+                        pstmt.setString(6, request.getParameter("COMMITTEEID")); 
+                        pstmt.setString(7, request.getParameter("STUDENTID")); 
                         int rowCount = pstmt.executeUpdate();
                         // Commit transaction
                          conn.commit();
@@ -120,6 +122,7 @@
                         <th>Is Precandidate</th>
                         <th>Is Candidate</th>
                         <th>Candidate Advisor</th>
+                        <th>Committee ID</th>
                     </tr>
                     <tr>
                         <form action="graduates.jsp" method="get">
@@ -130,6 +133,7 @@
                             <th><input value="" name="IS_PRECANDIDATE" size="5"></th>
                             <th><input value="" name="IS_CANDIDATE" size="5"></th>
                             <th><input value="" name="CANDIDATE_ADVISOR" size="15"></th>
+                            <th><input value="" name="COMMITTEEID" size="10"></th>
                             <th><input type="submit" value="Insert"></th>
                         </form>
                     </tr>
@@ -180,6 +184,12 @@
                             <td>
                                 <input value="<%= rs.getString("CANDIDATE_ADVISOR") %>" 
                                     name="CANDIDATE_ADVISOR" size="15">
+                            </td>
+                            
+                            <%-- Get the LASTNAME --%>
+                            <td>
+                                <input value="<%= rs.getString("COMMITTEEID") %>" 
+                                    name="COMMITTEEID" size="15">
                             </td>
     
                             <%-- Button --%>

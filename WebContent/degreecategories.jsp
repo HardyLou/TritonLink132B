@@ -74,16 +74,16 @@
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE DegreeCategory SET CATEGORY = ?, LOWERDIVUNITS = ?, " + 
-                            "UPPERDIVUNITS = ?, GPAREQ = ? WHERE DEGREEID = ?");
+                            "UPDATE DegreeCategory SET LOWERDIVUNITS = ?, " + 
+                            "UPPERDIVUNITS = ?, GPAREQ = ? WHERE DEGREEID = ? AND CATEGORY = ?");
 
-                        pstmt.setString(1, request.getParameter("CATEGORY"));
                         pstmt.setInt(
-                                2, Integer.parseInt(request.getParameter("LOWERDIVUNITS")));
+                                1, Integer.parseInt(request.getParameter("LOWERDIVUNITS")));
                         pstmt.setInt(
-                                3, Integer.parseInt(request.getParameter("UPPERDIVUNITS")));
-                        pstmt.setString(4, request.getParameter("GPAREQ"));
-                        pstmt.setString(5, request.getParameter("DEGREEID"));
+                                2, Integer.parseInt(request.getParameter("UPPERDIVUNITS")));
+                        pstmt.setString(3, request.getParameter("GPAREQ"));
+                        pstmt.setString(4, request.getParameter("DEGREEID"));
+                        pstmt.setString(5, request.getParameter("CATEGORY"));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -103,9 +103,10 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM DegreeCategory WHERE DEGREEID = ?");
+                            "DELETE FROM DegreeCategory WHERE DEGREEID = ? AND CATEGORY = ?");
 
                         pstmt.setString(1, request.getParameter("DEGREEID"));
+                        pstmt.setString(2, request.getParameter("CATEGORY"));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -197,6 +198,8 @@
                             <input type="hidden" value="delete" name="action">
                             <input type="hidden" 
                                 value="<%= rs.getString("DEGREEID") %>" name="DEGREEID">
+                            <input type="hidden" 
+                                value="<%= rs.getString("CATEGORY") %>" name="CATEGORY">
                             <%-- Button --%>
                             <td>
                                 <input type="submit" value="Delete">
