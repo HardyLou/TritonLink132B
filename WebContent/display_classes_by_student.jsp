@@ -12,6 +12,16 @@
     </head>
     <body>
         <h1>Display the classes currently taken by student</h1>
+        
+        <div style = "width:100%">
+        
+            <div style = "float:left; width:20%;">
+                <%-- -------- Include menu HTML code -------- --%>
+                <jsp:include page="menu.html" />                
+            </div>
+        
+            <div style = "float:left; width: 80%;">
+        
         <%!
         public class Studentsclasses {
             String URL = "jdbc:postgresql://localhost:5432/cse132b";
@@ -83,5 +93,8 @@
                 <% } %>
             </tbody>
         </table>
+        
+        </div>
+        </div>
     </body>
 </html>
