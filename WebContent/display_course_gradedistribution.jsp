@@ -28,38 +28,60 @@
             String PASSWORD = "hardylou";
 
             Connection connection = null;
-            PreparedStatement pstmt_all = null;
+            PreparedStatement pstmt_ii = null;
             PreparedStatement pstmt_iii = null;
-            ResultSet rs_all = null;
+            PreparedStatement pstmt_iv = null;
+            PreparedStatement pstmt_v = null;
+            ResultSet rs_ii = null;
             ResultSet rs_iii = null;
+            ResultSet rs_iv = null;
+            ResultSet rs_v = null;
 
             public GradeReport(){
                 
                 try {
                     connection = DriverManager.getConnection(URL, USERNAME,PASSWORD);
                     
-                    pstmt_all = connection.prepareStatement(
-                        "SELECT COUNT(CASE WHEN c.gradereceived ='A+' OR c.gradereceived='A' OR c.gradereceived='A-' THEN 1 END) AS numA,"
-                              + "COUNT(CASE WHEN c.gradereceived ='B+' OR c.gradereceived='B' OR c.gradereceived='B-' THEN 1 END) AS numB,"
-                              + "COUNT(CASE WHEN c.gradereceived ='C+' OR c.gradereceived='C' OR c.gradereceived='C-' THEN 1 END) AS numC,"
-                              + "COUNT(CASE WHEN c.gradereceived ='D+' OR c.gradereceived='D' OR c.gradereceived='D-' THEN 1 END) AS numD,"
-                              + "COUNT(CASE WHEN c.gradereceived ='F' OR c.gradereceived='P' OR c.gradereceived='NP' THEN 1 END) AS numOther"
+                    pstmt_ii = connection.prepareStatement(
+                        "SELECT COUNT(CASE WHEN c.gradereceived IN ('A+','A','A-') THEN 1 END) AS numA,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('B+','B','B-') THEN 1 END) AS numB,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('C+','C','C-') THEN 1 END) AS numC,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('D+','D','D-') THEN 1 END) AS numD,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('F+','F','F-','P','NP') THEN 1 END) AS numOther"
                         + " FROM course a, class b, classenrollment c"
                         + " WHERE a.title = ? AND b.instructor = ? AND b.term = ?"
                         + " AND a.title = b.coursetitle"
                         + " AND b.sectionid = c.sectionid");
                     
                     pstmt_iii = connection.prepareStatement(
-                    	"SELECT COUNT(CASE WHEN c.gradereceived ='A+' OR c.gradereceived='A' OR c.gradereceived='A-' THEN 1 END) AS numA,"
-                              + "COUNT(CASE WHEN c.gradereceived ='B+' OR c.gradereceived='B' OR c.gradereceived='B-' THEN 1 END) AS numB,"
-                              + "COUNT(CASE WHEN c.gradereceived ='C+' OR c.gradereceived='C' OR c.gradereceived='C-' THEN 1 END) AS numC,"
-                              + "COUNT(CASE WHEN c.gradereceived ='D+' OR c.gradereceived='D' OR c.gradereceived='D-' THEN 1 END) AS numD,"
-                              + "COUNT(CASE WHEN c.gradereceived ='F' OR c.gradereceived='P' OR c.gradereceived='NP' THEN 1 END) AS numOther"
+                       "SELECT COUNT(CASE WHEN c.gradereceived IN ('A+','A','A-') THEN 1 END) AS numA,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('B+','B','B-') THEN 1 END) AS numB,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('C+','C','C-') THEN 1 END) AS numC,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('D+','D','D-') THEN 1 END) AS numD,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('F+','F','F-','P','NP') THEN 1 END) AS numOther"
                         + " FROM course a, class b, classenrollment c"
                         + " WHERE a.title = ? AND b.instructor = ?"
                         + " AND a.title = b.coursetitle"
                         + " AND b.sectionid = c.sectionid");
                     		
+                    pstmt_iv = connection.prepareStatement(
+                        "SELECT COUNT(CASE WHEN c.gradereceived IN ('A+','A','A-') THEN 1 END) AS numA,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('B+','B','B-') THEN 1 END) AS numB,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('C+','C','C-') THEN 1 END) AS numC,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('D+','D','D-') THEN 1 END) AS numD,"
+                              + "COUNT(CASE WHEN c.gradereceived IN ('F+','F','F-','P','NP') THEN 1 END) AS numOther"
+                        + " FROM course a, class b, classenrollment c"
+                        + " WHERE a.title = ?"
+                        + " AND a.title = b.coursetitle"
+                        + " AND b.sectionid = c.sectionid");
+                    
+                    pstmt_v = connection.prepareStatement(
+                    	"SELECT AVG(t.value)"
+                    	+ " FROM course a, class b, classenrollment c, gradeconversion t"
+                        + " WHERE a.title = ? AND b.instructor = ?"
+                        + " AND a.title = b.coursetitle"
+                        + " AND b.sectionid = c.sectionid"
+                        + " AND c.gradereceived = t.lettergrade");
                     
                 } catch (SQLException e){
                     e.printStackTrace();
@@ -69,16 +91,16 @@
 
             public ResultSet getDistribution(String TITLE, String INSTRUCTOR, String TERM){
                 try{
-                    pstmt_all.setString(1, TITLE);
-                    pstmt_all.setString(2, INSTRUCTOR);
-                    pstmt_all.setString(3, TERM);
+                    pstmt_ii.setString(1, TITLE);
+                    pstmt_ii.setString(2, INSTRUCTOR);
+                    pstmt_ii.setString(3, TERM);
 
-                    rs_all = pstmt_all.executeQuery();
+                    rs_ii = pstmt_ii.executeQuery();
                 } catch (SQLException e){
                     e.printStackTrace();
                 }
 
-                return rs_all;
+                return rs_ii;
             }
             
             public ResultSet getDistribution(String TITLE, String INSTRUCTOR){
@@ -94,7 +116,30 @@
                 return rs_iii;
             }
 
+            public ResultSet getDistribution(String TITLE){
+                try{
+                    pstmt_iv.setString(1, TITLE);
+
+                    rs_iv = pstmt_iv.executeQuery();
+                } catch (SQLException e){
+                    e.printStackTrace();
+                }
+
+                return rs_iv;
+            }
             
+            public ResultSet getGPA(String TITLE, String INSTRUCTOR){
+                try{
+                    pstmt_v.setString(1, TITLE);
+                    pstmt_v.setString(2, INSTRUCTOR);
+
+                    rs_v = pstmt_v.executeQuery();
+                } catch (SQLException e){
+                    e.printStackTrace();
+                }
+
+                return rs_v;
+            }
         }
         %>
         
@@ -118,6 +163,8 @@
             GradeReport stdreport = new GradeReport();
             ResultSet part_ii = stdreport.getDistribution(courseTitle, classInstructor, classTerm);
             ResultSet part_iii = stdreport.getDistribution(courseTitle, classInstructor);
+            ResultSet part_iv = stdreport.getDistribution(courseTitle);
+            ResultSet part_v = stdreport.getGPA(courseTitle, classInstructor);
         %>
         <table border="1">
             <tbody>
@@ -161,6 +208,39 @@
             </tbody>
         </table>
         
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>A</td>
+                    <td>B</td>
+                    <td>C</td>
+                    <td>D</td>
+                    <td>Other</td>
+                </tr>
+                <% while (part_iv.next()){ %>
+                <tr>
+                    <td><%= part_iv.getInt("numA") %></td>
+                    <td><%= part_iv.getInt("numB") %></td>
+                    <td><%= part_iv.getInt("numC") %></td>
+                    <td><%= part_iv.getInt("numD") %></td>
+                    <td><%= part_iv.getInt("numOther") %></td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+        
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>GPA</td>
+                </tr>
+                <% while (part_v.next()){ %>
+                <tr>
+                    <td><%= part_v.getDouble(1) %></td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
         
         </div>
         </div>
