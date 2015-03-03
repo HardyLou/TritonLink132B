@@ -40,14 +40,16 @@
                     
                     pstmt_classes = connection.prepareStatement(
                         "SELECT x.name"
-                        + " FROM concentration x, class y, classenrollment z"
+                        + " FROM gradeconversion w, concentration x, class y, classenrollment z"
                         + " WHERE x.reqcourse = y.coursetitle"
                         + " AND y.sectionid = z.sectionid"
                         + " AND z.gradereceived <> 'P'"
                         + " AND z.gradereceived <> 'NP'"
+                        + " AND z.gradereceived = w.lettergrade"
                         + " AND z.studentid = ?"
                         + " GROUP BY x.name"
                         + " HAVING SUM(z.units) >= 12"
+                        + " AND AVG(w.value) >= 3"
                     ); 
                     pstmt_gpa = connection.prepareStatement(
                         "SELECT DISTINCT x.name, y.coursetitle, z.term"
