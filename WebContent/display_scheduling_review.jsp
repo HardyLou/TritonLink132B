@@ -45,8 +45,10 @@
                         + " WHERE c.sectionid = ?"
                         + " AND c.meetingid = w.id"
                         + " AND w.day = a.day"
-                        + " AND a.start_time <= w.start_time"
+                        + " AND ((a.start_time <= w.start_time"
                         + " AND w.start_time < a.end_time)"
+                        + " OR (a.start_time <= w.end_time"
+                        + " AND w.end_time < a.end_time)))"
                     );
                 } catch (SQLException e){
                     e.printStackTrace();
