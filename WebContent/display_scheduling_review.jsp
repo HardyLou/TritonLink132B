@@ -8,10 +8,10 @@
 
 <html>
     <head>
-        <title>Test</title>
+        <title>Review Session Scheduling</title>
     </head>
     <body>
-        <h1>Display the requirements needed by student</h1>
+        <h1>Display the options for a review session</h1>
         
         <div style = "width:100%">
         
@@ -79,7 +79,7 @@
         %>
         <table border="1">
             <tbody>
-                Test
+                Available times slots for Spring
                 <% while (classes.next()){ %>
                 <tr>
                     <td><%= classes.getString("date") %></td>
