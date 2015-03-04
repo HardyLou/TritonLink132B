@@ -57,7 +57,7 @@
             </div>
         
             <div style = "float:left; width:80%;">
-                <form name="form_classes_by_student" action="display_ms_requirements.jsp" method="POST">
+                <form name="form_classes_by_student" action="display_scheduling_review.jsp" method="POST">
                         <table border="1">
                         <tbody>
                           <%--  <tr>   
@@ -70,7 +70,7 @@
                                 <td><select name="selected" onchange="handleSelect(this.form)"> 
                                     <% while (resultset.next()){ %>
                                     <option>
-                                        <%= resultset.getString("sectionid") %>
+                                        <%= resultset.getInt("sectionid") %>
                                     </option>
                                     <% } %>
                                 </select></td>
