@@ -43,26 +43,14 @@
                     connection = DriverManager.getConnection(URL, USERNAME,PASSWORD);
                     
                     pstmt_ii = connection.prepareStatement(
-                        "SELECT COUNT(CASE WHEN c.gradereceived IN ('A+','A','A-') THEN 1 END) AS numA,"
-                              + "COUNT(CASE WHEN c.gradereceived IN ('B+','B','B-') THEN 1 END) AS numB,"
-                              + "COUNT(CASE WHEN c.gradereceived IN ('C+','C','C-') THEN 1 END) AS numC,"
-                              + "COUNT(CASE WHEN c.gradereceived IN ('D+','D','D-') THEN 1 END) AS numD,"
-                              + "COUNT(CASE WHEN c.gradereceived IN ('F+','F','F-','P','NP') THEN 1 END) AS numOther"
-                        + " FROM course a, class b, classenrollment c"
-                        + " WHERE a.title = ? AND b.instructor = ? AND b.term = ?"
-                        + " AND a.title = b.coursetitle"
-                        + " AND b.sectionid = c.sectionid");
+                        "SELECT countA, countB, countC, countD, countOther"
+                        + " FROM CPQG"
+                        + " WHERE title = ? AND instructor = ? AND term = ?");
                     
                     pstmt_iii = connection.prepareStatement(
-                       "SELECT COUNT(CASE WHEN c.gradereceived IN ('A+','A','A-') THEN 1 END) AS numA,"
-                              + "COUNT(CASE WHEN c.gradereceived IN ('B+','B','B-') THEN 1 END) AS numB,"
-                              + "COUNT(CASE WHEN c.gradereceived IN ('C+','C','C-') THEN 1 END) AS numC,"
-                              + "COUNT(CASE WHEN c.gradereceived IN ('D+','D','D-') THEN 1 END) AS numD,"
-                              + "COUNT(CASE WHEN c.gradereceived IN ('F+','F','F-','P','NP') THEN 1 END) AS numOther"
-                        + " FROM course a, class b, classenrollment c"
-                        + " WHERE a.title = ? AND b.instructor = ?"
-                        + " AND a.title = b.coursetitle"
-                        + " AND b.sectionid = c.sectionid");
+                       "SELECT countA, countB, countC, countD, countOther"
+                        + " FROM CPG"
+                        + " WHERE title = ? AND instructor = ?");
                     		
                     pstmt_iv = connection.prepareStatement(
                         "SELECT COUNT(CASE WHEN c.gradereceived IN ('A+','A','A-') THEN 1 END) AS numA,"
@@ -168,6 +156,7 @@
         %>
         <table border="1">
             <tbody>
+                Count of grades given by Professor Y at Quarter Z to the students taking Course X
                 <tr>
                     <td>A</td>
                     <td>B</td>
@@ -177,11 +166,11 @@
                 </tr>
                 <% while (part_ii.next()){ %>
                 <tr>
-                    <td><%= part_ii.getInt("numA") %></td>
-                    <td><%= part_ii.getInt("numB") %></td>
-                    <td><%= part_ii.getInt("numC") %></td>
-                    <td><%= part_ii.getInt("numD") %></td>
-                    <td><%= part_ii.getInt("numOther") %></td>
+                    <td><%= part_ii.getDouble("countA") %></td>
+                    <td><%= part_ii.getDouble("countB") %></td>
+                    <td><%= part_ii.getDouble("countC") %></td>
+                    <td><%= part_ii.getDouble("countD") %></td>
+                    <td><%= part_ii.getDouble("countOther") %></td>
                 </tr>
                 <% } %>
             </tbody>
@@ -189,6 +178,7 @@
         
         <table border="1">
             <tbody>
+                Count of grades given by Professor Y to students in Course X over the years
                 <tr>
                     <td>A</td>
                     <td>B</td>
@@ -198,11 +188,11 @@
                 </tr>
                 <% while (part_iii.next()){ %>
                 <tr>
-                    <td><%= part_iii.getInt("numA") %></td>
-                    <td><%= part_iii.getInt("numB") %></td>
-                    <td><%= part_iii.getInt("numC") %></td>
-                    <td><%= part_iii.getInt("numD") %></td>
-                    <td><%= part_iii.getInt("numOther") %></td>
+                    <td><%= part_iii.getDouble("countA") %></td>
+                    <td><%= part_iii.getDouble("countB") %></td>
+                    <td><%= part_iii.getDouble("countC") %></td>
+                    <td><%= part_iii.getDouble("countD") %></td>
+                    <td><%= part_iii.getDouble("countOther") %></td>
                 </tr>
                 <% } %>
             </tbody>
@@ -210,6 +200,7 @@
         
         <table border="1">
             <tbody>
+                Count of grades given to students in Course X over the years
                 <tr>
                     <td>A</td>
                     <td>B</td>
@@ -231,6 +222,7 @@
         
         <table border="1">
             <tbody>
+                GPA of grades that Professor Y has give in Course X over the years
                 <tr>
                     <td>GPA</td>
                 </tr>
