@@ -45,7 +45,9 @@
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO ClassEnrollment VALUES (?, ?, ?, ?, ?, ?, ?)");
+                            "INSERT INTO ClassEnrollment VALUES (?, ?, ?, ?, ?, ?, ?);" +
+                            "REFRESH MATERIALIZED VIEW cpqg;" +
+                            "REFRESH MATERIALIZED VIEW cpg");
  
                         pstmt.setInt(
                                 1, Integer.parseInt(request.getParameter("ENTRY")));
@@ -77,7 +79,9 @@
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
                             "UPDATE ClassEnrollment SET STUDENTID = ?, SECTIONID = ?," +
-                            "TERM = ?, GRADE = ?, UNITS = ?, GRADERECEIVED = ? WHERE ENTRY = ?");
+                            "TERM = ?, GRADE = ?, UNITS = ?, GRADERECEIVED = ? WHERE ENTRY = ?;" +
+                            "REFRESH MATERIALIZED VIEW cpqg;" +
+                            "REFRESH MATERIALIZED VIEW cpg");
                         pstmt.setString(1, request.getParameter("STUDENTID"));
                         pstmt.setInt(
                                 2, Integer.parseInt(request.getParameter("SECTIONID")));
@@ -107,7 +111,9 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM ClassEnrollment WHERE ENTRY = ?");
+                            "DELETE FROM ClassEnrollment WHERE ENTRY = ?;" +
+                            "REFRESH MATERIALIZED VIEW cpqg;" +
+                            "REFRESH MATERIALIZED VIEW cpg");
 
                         pstmt.setInt(
                         		1, Integer.parseInt(request.getParameter("ENTRY")));
